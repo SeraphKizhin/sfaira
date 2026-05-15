@@ -1,0 +1,329 @@
+body {
+    background: linear-gradient(135deg, #0f111a 0%, #1e1324 25%, #261f14 50%, #121b22 75%, #0f111a 100%);
+    background-size: 400% 400%;
+    animation: prismShift 20s ease infinite;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #e0e0e0;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+}
+
+@keyframes prismShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.wiki-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px;
+    background: rgba(10, 10, 15, 0.85);
+    color: white;
+    border-bottom: 3px solid;
+    border-image: linear-gradient(90deg, #00f2fe, #f093fb, #ffd700, #f5576c, #00f2fe) 1;
+    backdrop-filter: blur(12px);
+}
+
+.nav-left .logo {
+    font-size: 2.5rem;
+    font-weight: 900;
+    letter-spacing: 2px;
+    margin: 0;
+    background: linear-gradient(90deg, #ffd700 0%, #ff8c00 25%, #da70d6 50%, #00ffff 75%, #ffd700 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% auto;
+    animation: shine 5s linear infinite;
+}
+
+@keyframes shine {
+    to { background-position: 200% center; }
+}
+
+.nav-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.nav-title {
+    font-weight: bold;
+    font-size: 1.1rem;
+    letter-spacing: 3px;
+    margin-bottom: 5px;
+    color: #ffd700;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    padding: 0;
+    margin: 0;
+}
+
+.nav-links a {
+    color: #a0a5b5;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+    transition: color 0.3s;
+}
+
+.nav-links a:hover {
+    color: #ffd700;
+    text-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+}
+
+.search-container {
+    display: flex;
+    gap: 5px;
+}
+
+.search-container input {
+    padding: 6px 12px;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
+    outline: none;
+}
+
+.search-container button {
+    border: none;
+    background: rgba(255, 215, 0, 0.15);
+    color: #ffd700;
+    cursor: pointer;
+    border-radius: 4px;
+    padding: 0 10px;
+    transition: 0.3s;
+}
+
+.search-container button:hover {
+    background: #ffd700;
+    color: #111;
+}
+
+.hub-container {
+    max-width: 900px; 
+    margin: 40px auto;
+    padding: 0 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.glass-panel {
+    background: rgba(15, 15, 20, 0.65);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    /* Very subtle gold/prism border mix */
+    border: 1px solid rgba(255, 215, 0, 0.2);
+    border-radius: 30px; 
+    padding: 30px 40px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(255, 215, 0, 0.02);
+    text-align: center;
+}
+
+.panel-subtitle {
+    font-size: 1.2rem;
+    font-weight: bold;
+    letter-spacing: 2px;
+    color: #a0a5b5;
+    margin: 0 0 10px 0;
+}
+
+.hero-title {
+    font-size: 4.5rem;
+    font-weight: 900;
+    margin: 0;
+    letter-spacing: -1px;
+    color: #ffffff;
+    text-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+}
+
+.hero-welcome {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #ffd700;
+    margin: 10px 0 20px 0;
+}
+
+.glass-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,215,0,0.5), transparent);
+    margin: 20px auto;
+    width: 80%;
+}
+
+.hero-lorem {
+    font-size: 0.95rem;
+    color: #b0b5c5;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.panel-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    letter-spacing: 2px;
+    margin: 0 0 30px 0;
+    color: #ffffff;
+}
+
+.character-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; 
+    gap: 20px;
+}
+
+.char-card {
+    text-decoration: none;
+    color: inherit;
+    width: 180px; 
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.char-card:hover {
+    transform: translateY(-5px);
+}
+
+.char-card:hover .char-image {
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.3), 0 0 10px rgba(0, 242, 254, 0.2);
+    border-color: #ffd700;
+}
+
+.char-image {
+    width: 180px;
+    height: 180px;
+    border: 2px solid rgba(255,255,255,0.1);
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.char-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top; 
+}
+
+.char-label {
+    margin-top: 10px;
+    font-weight: bold;
+    font-size: 1.1rem;
+    text-align: center;
+    color: #e0e0e0;
+    transition: color 0.3s;
+}
+
+.char-card:hover .char-label {
+    color: #ffd700;
+}
+
+.theme-toggle {
+    background: rgba(255, 215, 0, 0.15);
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    color: white;
+    cursor: pointer;
+    border-radius: 4px;
+    padding: 5px 10px;
+    margin-left: 10px;
+    transition: 0.3s;
+    font-size: 1rem;
+}
+
+.theme-toggle:hover {
+    background: rgba(255, 215, 0, 0.4);
+    transform: scale(1.05);
+}
+
+body.light-mode {
+    background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 25%, #e2d1f9 50%, #fdfcfb 75%, #e0eafc 100%);
+    color: #2c2c2c;
+}
+
+body.light-mode .wiki-nav {
+    background: rgba(255, 255, 255, 0.7);
+}
+
+body.light-mode .nav-title {
+    color: #333;
+}
+
+body.light-mode .nav-links a {
+    color: #555;
+}
+
+body.light-mode .nav-links a:hover {
+    color: #e94057; /* Changes hover color from Gold to a vibrant Red/Pink */
+    text-shadow: none;
+}
+
+body.light-mode .glass-panel {
+    background: rgba(255, 255, 255, 0.65);
+    border: 2px solid rgba(255, 255, 255, 0.9);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
+}
+
+body.light-mode .hero-title, 
+body.light-mode .panel-title {
+    color: #111;
+    text-shadow: none;
+}
+
+body.light-mode .hero-welcome {
+    color: #e94057;
+}
+
+body.light-mode .panel-subtitle, 
+body.light-mode .hero-lorem {
+    color: #444;
+}
+
+body.light-mode .char-image {
+    background: rgba(255, 255, 255, 0.8);
+    border-color: rgba(0,0,0,0.1);
+}
+
+body.light-mode .char-label {
+    color: #2c2c2c;
+}
+
+body.light-mode .char-card:hover .char-label {
+    color: #e94057;
+}
+
+body.light-mode .search-container input {
+    border-color: #ccc;
+    background: rgba(0,0,0,0.05);
+    color: #111;
+}
+
+body.light-mode .search-container input::placeholder {
+    color: #888;
+}
+
+body.light-mode .search-container button,
+body.light-mode .theme-toggle {
+    background: rgba(0,0,0,0.05);
+    border-color: #ccc;
+    color: #333;
+}
+
+body.light-mode .search-container button:hover,
+body.light-mode .theme-toggle:hover {
+    background: rgba(0,0,0,0.15);
+}

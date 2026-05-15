@@ -1,0 +1,390 @@
+body {
+    background-color: #f8f9fa;
+    font-family: sans-serif;
+    line-height: 1.6;
+    margin: 40px;
+    color: #202122;
+}
+
+.wiki-container {
+    display: flex;
+    max-width: 1100px;
+    margin: 40px auto;
+    gap: 50px;
+    align-items: flex-start; 
+}
+
+.main-content {
+    flex: 2;
+}
+
+.content-subtitle {
+    font-size: 0.9rem;
+    letter-spacing: 3px;
+    color: #666;
+    margin: 0;
+}
+
+.content-subtitle-title {
+    font-size: 1.1rem;
+    letter-spacing: 2px;
+    font-weight: bold;
+    color: #000;
+    margin-bottom: -15px; 
+    text-transform: uppercase;
+}
+
+.content-name {
+    font-size: 5rem;
+    font-family: 'Times New Roman', serif;
+    margin: 0;
+    text-transform: uppercase;
+    font-weight: 900;
+    line-height: 1;
+    border: none;
+}
+
+.big-line {
+    height: 6px;
+    background-color: #000;
+    margin: 25px 0;
+}
+
+h1, h2 {
+    font-family: 'Linux Libertine', 'Georgia', serif;
+}
+
+h3 {
+    font-size: 1.2rem;
+    letter-spacing: 2px;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+.abilities-grid {
+    display: flex;
+    gap: 20px;
+    font-size: 1.1rem;
+}
+
+.lore-body {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #333;
+    text-align: justify;
+}
+
+.infobox-title {
+    background: #cad175;
+    text-align: center;
+    font-weight: bold;
+    padding: 5px;
+    font-size: 1.2em;
+}
+
+.infobox-image {
+    text-align: center;
+    margin: 10px 0;
+    border-bottom: 1px solid #cad175;
+}
+
+.infobox-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.infobox-table th {
+    text-align: left;
+    background: #cad175;
+    padding: 5px;
+}
+
+.infobox-table td {
+    padding: 5px;
+}
+
+.resource-bars p {
+    margin: 0;
+    line-height: 1.1;
+}
+
+.resource-bars {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.attributes-wrapper {
+    display: flex;
+    justify-content: flex-start;
+    gap: 80px;
+}
+
+.attr-column h3 {
+    font-size: 1rem;
+    color: #797d48;
+    letter-spacing: 1px;
+    margin-bottom: 15px;
+}
+
+.attr-column1 h3 {
+    font-size: 1rem;
+    color: #841c1c;
+    letter-spacing: 1px;
+    margin-bottom: 15px;
+}
+
+.attr-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.attr-list li {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1.1rem;
+    line-height: 1.8;
+    white-space: pre;
+}
+
+.attr-list strong {
+    display: inline-block;
+    width: 45px;
+}
+
+.ability-subsection {
+    margin-bottom: 30px;
+}
+
+.ability-subsection h4 {
+    font-size: 1.4rem;
+    color: #444;
+    border-bottom: 2px solid #ddd;
+    margin-bottom: 15px;
+    padding-bottom: 5px;
+    text-transform: uppercase;
+}
+
+.ability-item {
+    margin-bottom: 20px;
+    padding-left: 10px;
+    border-left: 3px solid #000;
+}
+
+.ability-header {
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin: 0;
+}
+
+.ability-quote {
+    font-style: italic;
+    color: #555;
+    margin: 5px 0;
+}
+
+.ability-tech {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: #222;
+    background: #f1f1f1;
+    padding: 10px;
+    border-radius: 4px;
+    margin-top: 8px;
+}
+
+.innate-talent-list {
+    margin-top: 10px;
+    padding-left: 20px;
+    font-size: 0.9rem;
+    color: #841c1c;
+}
+
+.the-messiah {
+    margin-top: 10px;
+    padding-left: 20px;
+    font-size: 0.9rem;
+    color: #2c3e98;
+}
+
+.the-house {
+    margin-top: 10px;
+    padding-left: 20px;
+    font-size: 0.9rem;
+    color: #7f6012; 
+}
+
+.paradise-lost {
+    margin-top: 10px;
+    padding-left: 20px;
+    font-size: 0.9rem;
+    color: #7b7b2a;
+}
+
+.arcane-echo {
+    margin-top: 10px;
+    padding-left: 20px;
+    font-size: 0.9rem;
+    color: #500e48;
+}
+
+.ability-header {
+    color: #333;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.ability-item:hover {
+    background-color: #f9f9f9;
+    border-left-color: #841c1c;
+    transition: 0.2s;
+}
+
+.contract-divider {
+    text-align: center;
+    color: #888;
+    margin: 15px 0;
+    font-size: 1.2rem;
+}
+
+.note-box {
+    font-family: 'Courier New', Courier, monospace;
+    background: #fff3f3;
+    border: 1px dashed #841c1c;
+    padding: 10px;
+    margin-top: 15px;
+    color: #841c1c;
+    font-weight: bold;
+}
+
+.redemption-highlight {
+    color: #4a90e2;
+    font-weight: bold;
+}
+
+ol {
+    padding-left: 20px;
+    margin-top: 10px;
+}
+
+ol li {
+    margin-bottom: 5px;
+}
+
+.ability-tech ul {
+    margin-top: 10px;
+    padding-left: 20px;
+}
+
+.ability-tech li {
+    margin-bottom: 8px;
+}
+
+.side-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: fit-content; 
+}
+
+.infobox {
+    background: #f8f9fa;
+    border: 1px solid #a2a9b1;
+    padding: 10px;
+    height: auto; 
+    font-size: 0.9em;
+}
+
+.sidebar-subtitle {
+    display: block;
+    margin-top: -10px;
+    margin-bottom: 10px;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    font-style: italic;
+}
+
+body {
+    background-color: #f4f1ea; 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #2c2c2c;
+    margin: 0;
+    padding: 0;
+}
+
+.wiki-container {
+    background-color: #fdfbf7;
+    box-shadow: 0 0 20px rgba(0,0,0,0.05);
+    padding: 40px;
+    border-radius: 8px;
+}
+
+.infobox {
+    background: #fffefc; 
+    border: 1px solid #dcd7ca;
+}
+
+.content-name {
+    font-size: 6rem;
+    font-family: 'Times New Roman', serif;
+    margin: 0;
+    text-transform: uppercase;
+    font-weight: 900;
+    line-height: 0.85; 
+    color: #1a1a1a;  
+    letter-spacing: -2px;
+    border: none;
+}
+
+.content-subtitle-title {
+    font-size: 1.2rem;
+    letter-spacing: 5px;
+    font-weight: bold;
+    color: #841c1c;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+}
+
+.collapsible-section {
+    margin-bottom: 20px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+}
+
+.collapsible-section summary {
+    cursor: pointer;
+    list-style: none;
+    outline: none;
+}
+
+.collapsible-section summary::-webkit-details-marker {
+    display: none;
+}
+
+.collapsible-section summary h3 {
+    display: inline-block;
+    margin: 0;
+    transition: color 0.2s;
+}
+
+.collapsible-section summary:hover h3 {
+    color: #841c1c; 
+}
+
+.collapsible-section summary h3::before {
+    content: "▶ ";
+    font-size: 0.8rem;
+    vertical-align: middle;
+    margin-right: 10px;
+    transition: transform 0.2s;
+    display: inline-block;
+}
+
+.collapsible-section[open] summary h3::before {
+    transform: rotate(90deg);
+}
+
+.details-content {
+    padding: 20px 0;
+}
