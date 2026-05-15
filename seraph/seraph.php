@@ -40,6 +40,7 @@ $avaricious_heart = [
 
 <div class="wiki-container">
     <main class="main-content">
+        <a href="../index.php" class="back-button">&larr; Return to Home</a>
         <p class="content-subtitle">CHARACTER DOSSIER</p>
         <p class="content-subtitle-title">"<?php echo strtoupper($title); ?>"</p> 
         <h1 class="content-name" ><?php echo $charName; ?></h1> 

@@ -388,3 +388,24 @@ body {
 .details-content {
     padding: 20px 0;
 }
+
+.back-button {
+    text-decoration: none;
+    color: #841c1c;
+    font-size: 0.85rem;
+    font-weight: bold;
+    font-family: 'Courier New', Courier, monospace;
+    display: inline-block;
+    margin-bottom: 25px;
+    padding: 5px 10px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.back-button:hover {
+    color: #cad175;
+    background: #1a1a1a;
+    border-color: #cad175;
+    transform: translateX(-5px);
+}
