@@ -50,8 +50,11 @@
                     <div class="char-image"><img src="images/seth.png" alt="Seth"></div>
                     <div class="char-label">Seth</div>
                 </a>
-                <a href="#" class="char-card" data-color="#DE98FF">
-                    <div class="char-image"><img src="images/fvyina.png" alt="Fvyina"></div>
+                <a href="#" class="char-card" data-color="#DE98FF" id="fvyina-card">
+                    <div class="char-image-wrap">
+                        <div class="char-image"><img src="images/fvyina.png" alt="Fvyina"></div>
+                        <canvas class="spark-canvas" id="fvyina-sparks"></canvas>
+                    </div>
                     <div class="char-label">Fvyina</div>
                 </a>
                 <a href="#" class="char-card" data-color="#FFDFAE" id="aurelius-card">
@@ -334,5 +337,138 @@
         verliererCard.addEventListener('mouseleave', stopVerlierer);
     </script>
 
+
+<script>
+/* ── Fvyina purple lightning sparks ──────────────────────────────────────── */
+(function() {
+    const card   = document.getElementById('fvyina-card');
+    const canvas = document.getElementById('fvyina-sparks');
+    if (!card || !canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    const COLORS = ['#DE98FF','#C87FFF','#B060EE','#E8B8FF','#9945DD','#F0D0FF','#CC88FF','#AA55EE'];
+
+    let sparks     = [];
+    let rafId      = null;   /* MUST be declared or cancelAnimationFrame blows up */
+    let spawning   = false;
+    let lingering  = false;
+    let spawnTimer = 0;
+    let fadeAlpha  = 1;
+
+    function resize() {
+        canvas.width  = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+    }
+
+    function makeSpark() {
+        const w = canvas.width, h = canvas.height;
+        const side = Math.floor(Math.random() * 4);
+        let x, y;
+        if      (side === 0) { x = Math.random() * w; y = Math.random() * 18; }
+        else if (side === 1) { x = w - Math.random() * 18; y = Math.random() * h; }
+        else if (side === 2) { x = Math.random() * w; y = h - Math.random() * 18; }
+        else                 { x = Math.random() * 18; y = Math.random() * h; }
+        return {
+            x, y,
+            color:   COLORS[Math.floor(Math.random() * COLORS.length)],
+            life:    0,
+            maxLife: 35 + Math.random() * 30,
+            angle:   Math.random() * Math.PI * 2,
+            len:     6 + Math.random() * 14,
+            width:   0.8 + Math.random() * 1.2,
+            fork:    Math.random() < 0.35 ? {
+                angle: Math.random() * Math.PI * 2,
+                len:   4 + Math.random() * 8
+            } : null
+        };
+    }
+
+    function drawSpark(s) {
+        const t     = s.life / s.maxLife;
+        const alpha = t < 0.3 ? t / 0.3 : 1 - (t - 0.3) / 0.7;
+        const dx    = Math.cos(s.angle) * s.len;
+        const dy    = Math.sin(s.angle) * s.len;
+        const jag   = (Math.random() - 0.5) * 8;
+        const mx    = s.x + dx * 0.5 + jag;
+        const my    = s.y + dy * 0.5 + jag;
+
+        ctx.save();
+        ctx.globalAlpha = alpha * 0.95;
+        ctx.strokeStyle = s.color;
+        ctx.lineWidth   = s.width * (1 - t * 0.5);
+        ctx.shadowColor = s.color;
+        ctx.shadowBlur  = 6 + Math.random() * 4;
+        ctx.lineCap     = 'round';
+        ctx.beginPath();
+        ctx.moveTo(s.x, s.y);
+        ctx.lineTo(mx, my);
+        ctx.lineTo(s.x + dx, s.y + dy);
+        ctx.stroke();
+
+        if (s.fork) {
+            ctx.lineWidth = s.width * 0.4;
+            ctx.beginPath();
+            ctx.moveTo(mx, my);
+            ctx.lineTo(mx + Math.cos(s.fork.angle) * s.fork.len,
+                       my + Math.sin(s.fork.angle) * s.fork.len);
+            ctx.stroke();
+        }
+
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, Math.max(0, 1.5 * (1 - t)), 0, Math.PI * 2);
+        ctx.fillStyle = '#fff';
+        ctx.globalAlpha = alpha * 0.7;
+        ctx.fill();
+        ctx.restore();
+    }
+
+    function loop() {
+        resize();
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        if (spawning) {
+            spawnTimer++;
+            if (spawnTimer >= 2) { sparks.push(makeSpark()); spawnTimer = 0; }
+            while (sparks.length < 8) sparks.push(makeSpark());
+            fadeAlpha = 1;
+            canvas.style.opacity = '1';
+        }
+
+        sparks = sparks.filter(s => s.life < s.maxLife);
+        sparks.forEach(s => { s.life++; drawSpark(s); });
+
+        if (lingering && sparks.length === 0) {
+            fadeAlpha -= 0.05;
+            canvas.style.opacity = Math.max(0, fadeAlpha);
+            if (fadeAlpha <= 0) {
+                lingering = false;
+                rafId = null;
+                return; /* stop — next mouseenter calls loop() fresh */
+            }
+        }
+
+        rafId = requestAnimationFrame(loop);
+    }
+
+    card.addEventListener('mouseenter', () => {
+        if (rafId !== null) cancelAnimationFrame(rafId);
+        rafId      = null;
+        spawning   = true;
+        lingering  = false;
+        spawnTimer = 0;
+        fadeAlpha  = 1;
+        canvas.style.opacity = '1';
+        loop();
+    });
+
+    card.addEventListener('mouseleave', () => {
+        spawning  = false;
+        lingering = true;
+    });
+
+    window.addEventListener('resize', resize);
+    resize();
+})();
+</script>
 </body>
 </html>
