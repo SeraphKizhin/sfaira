@@ -122,7 +122,6 @@ body {
     background: rgba(15, 15, 20, 0.65);
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
-    /* Very subtle gold/prism border mix */
     border: 1px solid rgba(255, 215, 0, 0.2);
     border-radius: 30px; 
     padding: 30px 40px;
@@ -268,7 +267,7 @@ body.light-mode .nav-links a {
 }
 
 body.light-mode .nav-links a:hover {
-    color: #e94057; /* Changes hover color from Gold to a vibrant Red/Pink */
+    color: #e94057;
     text-shadow: none;
 }
 
