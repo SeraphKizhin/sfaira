@@ -32,12 +32,6 @@ body {
     font-weight: 900;
     letter-spacing: 2px;
     margin: 0;
-    background: linear-gradient(90deg, #ffd700 0%, #ff8c00 25%, #da70d6 50%, #00ffff 75%, #ffd700 100%);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-size: 200% auto;
-    animation: shine 5s linear infinite;
 }
 
 @keyframes shine {
@@ -597,4 +591,18 @@ body.light-mode .theme-toggle:hover {
         0 0 35px 9px rgba(222, 152, 255, 0.2),
         inset 0 0 8px rgba(180, 90, 255, 0.12) !important;
     border-color: #C87FFF !important;
+}
+
+/* ── Fvyina rain overlay ─────────────────────────────────────────────────── */
+#fvyina-rain-canvas {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+}
+
+#fvyina-rain-canvas.active {
+    opacity: 1;
 }

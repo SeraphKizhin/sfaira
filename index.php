@@ -7,10 +7,11 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="landing-body">
+<canvas id="fvyina-rain-canvas"></canvas>
 
     <nav class="wiki-nav">
         <div class="nav-left">
-            <h1 class="logo">SFAIRA</h1>
+            <canvas id="sfaira-logo-canvas" style="display:block;cursor:default;" aria-label="SFAIRA"></canvas>
         </div>
         
         <div class="nav-center">
@@ -337,6 +338,173 @@
         verliererCard.addEventListener('mouseleave', stopVerlierer);
     </script>
 
+<script>
+/* ── SFAIRA gold refractive prism logo ───────────────────────────────────── */
+(function () {
+    const cvs = document.getElementById('sfaira-logo-canvas');
+    if (!cvs) return;
+    const ctx = cvs.getContext('2d');
+
+    const FONT_SIZE = 38;
+    const FONT = `900 ${FONT_SIZE}px 'Segoe UI', Arial, sans-serif`;
+    const TEXT = 'SFAIRA';
+
+    ctx.font = FONT;
+    const metrics = ctx.measureText(TEXT);
+    const W = Math.ceil(metrics.width) + 20;
+    const H = FONT_SIZE + 16;
+    cvs.width  = W;
+    cvs.height = H;
+    cvs.style.width  = W + 'px';
+    cvs.style.height = H + 'px';
+
+    const GOLD_STOPS = [
+        [0.00, '#4a2e00'],
+        [0.08, '#c8860a'],
+        [0.18, '#f5d060'],
+        [0.28, '#ffe680'],
+        [0.38, '#fff4b0'],
+        [0.46, '#ffd700'],
+        [0.54, '#ffec80'],
+        [0.62, '#e8a800'],
+        [0.72, '#b06800'],
+        [0.82, '#f0c840'],
+        [0.90, '#ffe070'],
+        [1.00, '#7a4e00'],
+    ];
+
+    const SHAFTS = Array.from({length: 6}, (_, i) => ({
+        x:      W * (0.08 + i * 0.17),
+        width:  8 + Math.random() * 16,
+        angle:  -0.25 + Math.random() * 0.5,
+        speedA: 0.008 + Math.random() * 0.006,
+        speedB: 0.005 + Math.random() * 0.004,
+        phase:  Math.random() * Math.PI * 2,
+        colorA: `hsla(${35 + Math.floor(Math.random()*25)}, 100%, 75%, 1)`,
+        colorB: `hsla(${190 + Math.floor(Math.random()*50)}, 90%, 85%, 1)`,
+    }));
+
+    const GLINTS = Array.from({length: 12}, () => ({
+        x:     8 + Math.random() * (W - 16),
+        y:     2 + Math.random() * (H - 4),
+        size:  2.5 + Math.random() * 7,
+        rot:   Math.random() * Math.PI,
+        speedR: 0.004 + Math.random() * 0.006,
+        speedP: 0.018 + Math.random() * 0.022,
+        phase: Math.random() * Math.PI * 2,
+        hue:   38 + Math.random() * 22,
+    }));
+
+    function drawTriangle(x, y, size, rot, alpha, hue) {
+        if (size < 0.5) return;
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(rot);
+        ctx.globalAlpha = alpha;
+        // soft halo
+        const halo = ctx.createRadialGradient(0, 0, 0, 0, 0, size * 2.5);
+        halo.addColorStop(0,   `hsla(${hue}, 100%, 95%, 0.7)`);
+        halo.addColorStop(0.5, `hsla(${hue}, 100%, 75%, 0.2)`);
+        halo.addColorStop(1,   `hsla(${hue}, 100%, 60%, 0)`);
+        ctx.beginPath();
+        ctx.arc(0, 0, size * 2.5, 0, Math.PI * 2);
+        ctx.fillStyle = halo;
+        ctx.fill();
+        // triangle
+        ctx.beginPath();
+        ctx.moveTo(0, -size);
+        ctx.lineTo( size * 0.866,  size * 0.5);
+        ctx.lineTo(-size * 0.866,  size * 0.5);
+        ctx.closePath();
+        const tg = ctx.createLinearGradient(0, -size, 0, size);
+        tg.addColorStop(0, `hsla(${hue+20}, 100%, 98%, 1)`);
+        tg.addColorStop(1, `hsla(${hue-10}, 100%, 65%, 0.5)`);
+        ctx.fillStyle = tg;
+        ctx.fill();
+        ctx.restore();
+    }
+
+    // Off-screen canvas for text-clipped effects
+    const off = document.createElement('canvas');
+    off.width  = W;
+    off.height = H;
+    const octx = off.getContext('2d');
+
+    let t = 0;
+
+    function frame() {
+        t += 0.012;
+        ctx.clearRect(0, 0, W, H);
+
+        // --- 1. Gold base text ---
+        const sweep = Math.sin(t * 0.35) * 0.5 + 0.5;
+        const gx1 = W * (sweep - 0.4), gx2 = W * (sweep + 0.7);
+        const baseGrad = ctx.createLinearGradient(gx1, 0, gx2, 0);
+        GOLD_STOPS.forEach(([p, c]) => baseGrad.addColorStop(p, c));
+        ctx.font = FONT;
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = baseGrad;
+        ctx.fillText(TEXT, 10, H * 0.52);
+
+        // --- 2. Inner effects on offscreen, then mask to text ---
+        octx.clearRect(0, 0, W, H);
+
+        // shimmer sweep
+        const shimX = ((t * 0.15) % 1.8 - 0.4) * W;
+        const shimGrad = octx.createLinearGradient(shimX - 70, 0, shimX + 70, 0);
+        shimGrad.addColorStop(0,   'rgba(255,255,255,0)');
+        shimGrad.addColorStop(0.35,'rgba(255,245,180,0.5)');
+        shimGrad.addColorStop(0.5, 'rgba(255,255,255,0.85)');
+        shimGrad.addColorStop(0.65,'rgba(255,245,180,0.5)');
+        shimGrad.addColorStop(1,   'rgba(255,255,255,0)');
+        octx.fillStyle = shimGrad;
+        octx.fillRect(0, 0, W, H);
+
+        // prism shafts
+        SHAFTS.forEach(s => {
+            const pulse = Math.sin(t * s.speedA * 60 + s.phase) * 0.5 + 0.5;
+            const op = 0.10 + 0.30 * pulse;
+            const cx = s.x + Math.sin(t * s.speedB * 60 + s.phase + 1) * 25;
+            const hw = s.width * (0.7 + 0.3 * pulse);
+            const sg = octx.createLinearGradient(cx - hw, 0, cx + hw, 0);
+            sg.addColorStop(0,   'rgba(255,255,255,0)');
+            sg.addColorStop(0.25, s.colorA.replace('1)', `${op * 0.8})`));
+            sg.addColorStop(0.5,  `rgba(255,255,220,${op * 1.3})`);
+            sg.addColorStop(0.75, s.colorB.replace('1)', `${op * 0.4})`));
+            sg.addColorStop(1,   'rgba(255,255,255,0)');
+            octx.save();
+            octx.translate(cx, H / 2);
+            octx.rotate(s.angle);
+            octx.fillStyle = sg;
+            octx.fillRect(-hw - 10, -H, hw * 2 + 20, H * 2);
+            octx.restore();
+        });
+
+        // Blit offscreen onto main canvas masked to text shape
+        ctx.save();
+        ctx.font = FONT;
+        ctx.textBaseline = 'middle';
+        ctx.globalCompositeOperation = 'source-atop';
+        ctx.drawImage(off, 0, 0);
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.restore();
+
+        // --- 3. Triangle glints (on top of everything) ---
+        GLINTS.forEach(g => {
+            const pulse = Math.sin(t * g.speedP + g.phase);
+            const alpha = Math.max(0, pulse) * 0.9;
+            if (alpha < 0.03) return;
+            const sz = g.size * (0.5 + 0.5 * Math.max(0, pulse));
+            drawTriangle(g.x, g.y, sz, g.rot + t * g.speedR, alpha, g.hue);
+        });
+
+        requestAnimationFrame(frame);
+    }
+
+    frame();
+})();
+</script>
+
 
 <script>
 /* ── Fvyina purple lightning sparks ──────────────────────────────────────── */
@@ -464,6 +632,164 @@
     card.addEventListener('mouseleave', () => {
         spawning  = false;
         lingering = true;
+    });
+
+    window.addEventListener('resize', resize);
+    resize();
+})();
+</script>
+
+<script>
+/* ── Fvyina: rolling rainclouds + soft rain ──────────────────────────────── */
+(function () {
+    const fvyinaCard = document.getElementById('fvyina-card');
+    const rc = document.getElementById('fvyina-rain-canvas');
+    if (!fvyinaCard || !rc) return;
+
+    const ctx = rc.getContext('2d');
+    let W = 0, H = 0;
+    let rafId    = null;
+    let fadeDir  = 0;      // +1 = fading in, -1 = fading out, 0 = idle
+    let alpha    = 0;      // master opacity 0..1
+
+    /* ── Rain drops ── */
+    const DROPS = [];
+    const DROP_COUNT = 160;
+
+    function makeDrop() {
+        return {
+            x:     Math.random() * W,
+            y:     Math.random() * H,
+            len:   8  + Math.random() * 10,
+            speed: 5  + Math.random() * 5,
+            op:    0.07 + Math.random() * 0.15,
+            w:     0.5 + Math.random() * 0.6,
+        };
+    }
+
+    function initDrops() {
+        DROPS.length = 0;
+        for (let i = 0; i < DROP_COUNT; i++) DROPS.push(makeDrop());
+    }
+
+    /* ── Clouds ── */
+    const LAYERS = [
+        { speed: 0.18, yFrac: 0.01, scale: 1.3, op: 0.55, clouds: [] },
+        { speed: 0.30, yFrac: 0.07, scale: 1.0, op: 0.45, clouds: [] },
+        { speed: 0.45, yFrac: 0.13, scale: 0.7, op: 0.35, clouds: [] },
+    ];
+
+    function buildCloud(layer) {
+        const n = 5 + Math.floor(Math.random() * 5);
+        const puffs = [];
+        let cx = 0;
+        for (let i = 0; i < n; i++) {
+            const r = (28 + Math.random() * 36) * layer.scale;
+            puffs.push({ ox: cx, oy: (Math.random() - 0.55) * r * 0.5, r });
+            cx += r * (0.85 + Math.random() * 0.3);
+        }
+        return { x: -cx - 20, y: 0, puffs, totalW: cx };
+    }
+
+    function initClouds() {
+        LAYERS.forEach(layer => {
+            layer.clouds = [];
+            for (let i = 0; i < 4; i++) {
+                const c = buildCloud(layer);
+                c.x = Math.random() * W;           // seed across screen
+                c.y = layer.yFrac * H + Math.random() * 80 * layer.scale;
+                layer.clouds.push(c);
+            }
+        });
+    }
+
+    function drawCloud(c, layer) {
+        ctx.save();
+        ctx.globalAlpha = layer.op * alpha;
+        c.puffs.forEach(p => {
+            const gx = c.x + p.ox, gy = c.y + p.oy;
+            const g = ctx.createRadialGradient(gx, gy - p.r * 0.2, p.r * 0.1, gx, gy, p.r);
+            g.addColorStop(0,   'rgba(72, 72, 78, 1)');
+            g.addColorStop(0.5, 'rgba(50, 50, 56, 0.9)');
+            g.addColorStop(1,   'rgba(28, 28, 34, 0)');
+            ctx.beginPath();
+            ctx.arc(gx, gy, p.r, 0, Math.PI * 2);
+            ctx.fillStyle = g;
+            ctx.fill();
+        });
+        ctx.restore();
+    }
+
+    /* Per-layer spawn timers so new clouds steadily enter from left */
+    const SPAWN_INTERVAL = [420, 280, 190];
+
+    /* ── Core loop ── */
+    let frameCount = 0;
+    function loop() {
+        frameCount++;
+
+        // Advance fade
+        if (fadeDir === 1)  alpha = Math.min(1, alpha + 0.012);
+        if (fadeDir === -1) alpha = Math.max(0, alpha - 0.008);
+
+        ctx.clearRect(0, 0, W, H);
+
+        // Move + draw clouds; spawn new ones from the left on interval
+        LAYERS.forEach((layer, li) => {
+            if (frameCount % SPAWN_INTERVAL[li] === 0) {
+                const c = buildCloud(layer);
+                c.x = -c.totalW - 10;
+                c.y = layer.yFrac * H + Math.random() * 80 * layer.scale;
+                layer.clouds.push(c);
+            }
+
+            layer.clouds = layer.clouds.filter(c => c.x < W + c.totalW + 40);
+
+            layer.clouds.forEach(c => {
+                c.x += layer.speed;
+                drawCloud(c, layer);
+            });
+        });
+
+        // Draw rain
+        DROPS.forEach(d => {
+            d.y += d.speed;
+            d.x += d.speed * 0.1;
+            if (d.y - d.len > H || d.x > W) { d.x = Math.random() * W; d.y = -d.len; }
+            ctx.beginPath();
+            ctx.moveTo(d.x, d.y);
+            ctx.lineTo(d.x + d.len * 0.1, d.y + d.len);
+            ctx.strokeStyle = `rgba(185, 155, 225, ${d.op * alpha})`;
+            ctx.lineWidth   = d.w;
+            ctx.stroke();
+        });
+
+        // Keep running while visible or fading
+        if (alpha > 0 || fadeDir === 1) {
+            rafId = requestAnimationFrame(loop);
+        } else {
+            rafId = null;
+        }
+    }
+
+    function ensureLoop() {
+        if (!rafId) rafId = requestAnimationFrame(loop);
+    }
+
+    function resize() {
+        W = rc.width  = window.innerWidth;
+        H = rc.height = window.innerHeight;
+    }
+
+    fvyinaCard.addEventListener('mouseenter', () => {
+        if (alpha === 0) { initDrops(); initClouds(); } // fresh init only when fully off
+        fadeDir = 1;
+        ensureLoop();
+    });
+
+    fvyinaCard.addEventListener('mouseleave', () => {
+        fadeDir = -1;
+        ensureLoop();
     });
 
     window.addEventListener('resize', resize);
