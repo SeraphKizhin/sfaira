@@ -273,81 +273,84 @@ body {
 }
 
 body.light-mode {
-    background: radial-gradient(ellipse at 50% 35%, #f5ecd6 0%, #ede4cf 45%, #e8dfc8 100%);
+    background: radial-gradient(ellipse at 40% 30%, #f0eaff 0%, #eaf4ff 30%, #ffeaf5 55%, #efffea 80%, #fffaea 100%);
+    background-attachment: fixed;
     color: #2c2c2c;
 }
 
 body.light-mode .wiki-nav {
-    background: rgba(255, 255, 255, 0.7);
+    background: rgba(255, 255, 255, 0.55);
+    backdrop-filter: blur(16px);
+    border-bottom: 3px solid transparent;
 }
 
 body.light-mode .nav-title {
-    color: #333;
+    color: #7a5fa8;
 }
 
 body.light-mode .nav-links a {
-    color: #555;
+    color: #5a7ab0;
 }
 
 body.light-mode .nav-links a:hover {
-    color: #e94057;
-    text-shadow: none;
+    color: #c060a0;
+    text-shadow: 0 0 8px rgba(192, 96, 160, 0.4);
 }
 
 body.light-mode .glass-panel {
-    background: rgba(255, 255, 255, 0.65);
-    border: 2px solid rgba(255, 255, 255, 0.9);
-    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
+    background: rgba(255, 255, 255, 0.5);
+    border: 2px solid rgba(255, 255, 255, 0.85);
+    box-shadow: 0 8px 32px 0 rgba(140, 100, 200, 0.08);
 }
 
-body.light-mode .hero-title, 
+body.light-mode .hero-title,
 body.light-mode .panel-title {
-    color: #111;
+    color: #3a2a5a;
     text-shadow: none;
 }
 
 body.light-mode .hero-welcome {
-    color: #e94057;
+    color: #b060a0;
 }
 
-body.light-mode .panel-subtitle, 
+body.light-mode .panel-subtitle,
 body.light-mode .hero-lorem {
-    color: #444;
+    color: #4a4a6a;
 }
 
 body.light-mode .char-image {
-    background: rgba(255, 255, 255, 0.8);
-    border-color: rgba(0,0,0,0.1);
+    background: rgba(255, 255, 255, 0.75);
+    border-color: rgba(160, 120, 220, 0.25);
 }
 
 body.light-mode .char-label {
-    color: #2c2c2c;
+    color: #3a2a5a;
 }
 
 body.light-mode .char-card:hover .char-label {
-    color: #e94057;
+    color: #b060a0;
 }
 
 body.light-mode .search-container input {
-    border-color: #ccc;
-    background: rgba(0,0,0,0.05);
-    color: #111;
+    border-color: rgba(160, 120, 220, 0.35);
+    background: rgba(255, 255, 255, 0.6);
+    color: #2c2c2c;
 }
 
 body.light-mode .search-container input::placeholder {
-    color: #888;
+    color: #9090b0;
 }
 
 body.light-mode .search-container button,
 body.light-mode .theme-toggle {
-    background: rgba(0,0,0,0.05);
-    border-color: #ccc;
-    color: #333;
+    background: rgba(160, 120, 220, 0.1);
+    border-color: rgba(160, 120, 220, 0.3);
+    color: #5a3a8a;
 }
 
 body.light-mode .search-container button:hover,
 body.light-mode .theme-toggle:hover {
-    background: rgba(0,0,0,0.15);
+    background: rgba(160, 120, 220, 0.22);
 }
 /* ── Aurelius flame border ───────────────────────────────────────────────── */
 /* Wrapper sits outside .char-image so flames aren't clipped by overflow:hidden */

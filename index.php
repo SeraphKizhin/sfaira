@@ -374,6 +374,23 @@
         [1.00, '#7a4e00'],
     ];
 
+    const PRISM_STOPS = [
+        [0.00, '#c084f5'],
+        [0.10, '#f0a0e0'],
+        [0.22, '#ffc8e8'],
+        [0.34, '#a0d4ff'],
+        [0.46, '#c8f0ff'],
+        [0.54, '#b0f0d0'],
+        [0.64, '#f0ffb0'],
+        [0.74, '#ffd0a0'],
+        [0.84, '#ffb0c8'],
+        [0.92, '#d0a0ff'],
+        [1.00, '#a080e0'],
+    ];
+
+    function isLight() { return document.body.classList.contains('light-mode'); }
+    function getStops() { return isLight() ? PRISM_STOPS : GOLD_STOPS; }
+
     const SHAFTS = Array.from({length: 6}, (_, i) => ({
         x:      W * (0.08 + i * 0.17),
         width:  8 + Math.random() * 16,
@@ -381,8 +398,8 @@
         speedA: 0.008 + Math.random() * 0.006,
         speedB: 0.005 + Math.random() * 0.004,
         phase:  Math.random() * Math.PI * 2,
-        colorA: `hsla(${35 + Math.floor(Math.random()*25)}, 100%, 75%, 1)`,
-        colorB: `hsla(${190 + Math.floor(Math.random()*50)}, 90%, 85%, 1)`,
+        hueA:   35  + Math.floor(Math.random()*25),
+        hueB:   190 + Math.floor(Math.random()*50),
     }));
 
     const GLINTS = Array.from({length: 12}, () => ({
@@ -394,6 +411,7 @@
         speedP: 0.018 + Math.random() * 0.022,
         phase: Math.random() * Math.PI * 2,
         hue:   38 + Math.random() * 22,
+        prismHue: 260 + Math.random() * 120,
     }));
 
     function drawTriangle(x, y, size, rot, alpha, hue) {
@@ -441,7 +459,7 @@
         const sweep = Math.sin(t * 0.35) * 0.5 + 0.5;
         const gx1 = W * (sweep - 0.4), gx2 = W * (sweep + 0.7);
         const baseGrad = ctx.createLinearGradient(gx1, 0, gx2, 0);
-        GOLD_STOPS.forEach(([p, c]) => baseGrad.addColorStop(p, c));
+        getStops().forEach(([p, c]) => baseGrad.addColorStop(p, c));
         ctx.font = FONT;
         ctx.textBaseline = 'middle';
         ctx.fillStyle = baseGrad;
@@ -452,11 +470,12 @@
 
         // shimmer sweep
         const shimX = ((t * 0.15) % 1.8 - 0.4) * W;
+        const shimMid = isLight() ? 'rgba(255,220,255,0.5)' : 'rgba(255,245,180,0.5)';
         const shimGrad = octx.createLinearGradient(shimX - 70, 0, shimX + 70, 0);
         shimGrad.addColorStop(0,   'rgba(255,255,255,0)');
-        shimGrad.addColorStop(0.35,'rgba(255,245,180,0.5)');
+        shimGrad.addColorStop(0.35, shimMid);
         shimGrad.addColorStop(0.5, 'rgba(255,255,255,0.85)');
-        shimGrad.addColorStop(0.65,'rgba(255,245,180,0.5)');
+        shimGrad.addColorStop(0.65, shimMid);
         shimGrad.addColorStop(1,   'rgba(255,255,255,0)');
         octx.fillStyle = shimGrad;
         octx.fillRect(0, 0, W, H);
@@ -467,12 +486,14 @@
             const op = 0.10 + 0.30 * pulse;
             const cx = s.x + Math.sin(t * s.speedB * 60 + s.phase + 1) * 25;
             const hw = s.width * (0.7 + 0.3 * pulse);
+            const light = isLight();
+            const midCol = light ? `hsla(${(s.hueA + s.hueB) / 2}, 80%, 90%, ${op * 1.2})` : `rgba(255,255,220,${op * 1.3})`;
             const sg = octx.createLinearGradient(cx - hw, 0, cx + hw, 0);
-            sg.addColorStop(0,   'rgba(255,255,255,0)');
-            sg.addColorStop(0.25, s.colorA.replace('1)', `${op * 0.8})`));
-            sg.addColorStop(0.5,  `rgba(255,255,220,${op * 1.3})`);
-            sg.addColorStop(0.75, s.colorB.replace('1)', `${op * 0.4})`));
-            sg.addColorStop(1,   'rgba(255,255,255,0)');
+            sg.addColorStop(0,    'rgba(255,255,255,0)');
+            sg.addColorStop(0.25, `hsla(${s.hueA}, 100%, 75%, ${op * 0.8})`);
+            sg.addColorStop(0.5,  midCol);
+            sg.addColorStop(0.75, `hsla(${s.hueB}, 90%, 85%, ${op * 0.4})`);
+            sg.addColorStop(1,    'rgba(255,255,255,0)');
             octx.save();
             octx.translate(cx, H / 2);
             octx.rotate(s.angle);
@@ -496,7 +517,7 @@
             const alpha = Math.max(0, pulse) * 0.9;
             if (alpha < 0.03) return;
             const sz = g.size * (0.5 + 0.5 * Math.max(0, pulse));
-            drawTriangle(g.x, g.y, sz, g.rot + t * g.speedR, alpha, g.hue);
+            drawTriangle(g.x, g.y, sz, g.rot + t * g.speedR, alpha, isLight() ? g.prismHue : g.hue);
         });
 
         requestAnimationFrame(frame);
@@ -537,14 +558,30 @@
     ];
 
     // Prism shafts along the rim
+    function isLight() { return document.body.classList.contains('light-mode'); }
+
+    const PRISM_STOPS = [
+        [0.00, '#c084f5'],
+        [0.10, '#f0a0e0'],
+        [0.22, '#ffc8e8'],
+        [0.34, '#a0d4ff'],
+        [0.46, '#c8f0ff'],
+        [0.54, '#b0f0d0'],
+        [0.64, '#f0ffb0'],
+        [0.74, '#ffd0a0'],
+        [0.84, '#ffb0c8'],
+        [0.92, '#d0a0ff'],
+        [1.00, '#a080e0'],
+    ];
+
     const SHAFTS = Array.from({length: 10}, (_, i) => ({
         xFrac:  i / 9,
         width:  18 + Math.random() * 40,
         speedA: 0.006 + Math.random() * 0.005,
         speedB: 0.004 + Math.random() * 0.003,
         phase:  Math.random() * Math.PI * 2,
-        colorA: `hsla(${35 + Math.floor(Math.random()*25)}, 100%, 80%, 1)`,
-        colorB: `hsla(${195 + Math.floor(Math.random()*45)}, 90%, 85%, 1)`,
+        hueA:   35  + Math.floor(Math.random()*25),
+        hueB:   195 + Math.floor(Math.random()*45),
     }));
 
     // Tiny glint dots along the rim
@@ -553,6 +590,7 @@
         speedP: 0.02 + Math.random() * 0.025,
         phase:  Math.random() * Math.PI * 2,
         hue:    38 + Math.random() * 20,
+        prismHue: 240 + Math.random() * 120,
     }));
 
     let t = 0;
@@ -562,20 +600,21 @@
         if (W === 0) { requestAnimationFrame(frame); return; }
         ctx.clearRect(0, 0, W, H);
 
-        // --- Base gold gradient (slowly sweeping) ---
+        // --- Base gradient (gold or prismatic pastel) ---
         const sweep = Math.sin(t * 0.35) * 0.5 + 0.5;
         const grad = ctx.createLinearGradient(W * (sweep - 0.4), 0, W * (sweep + 0.7), 0);
-        GOLD_STOPS.forEach(([p, c]) => grad.addColorStop(p, c));
+        (isLight() ? PRISM_STOPS : GOLD_STOPS).forEach(([p, c]) => grad.addColorStop(p, c));
         ctx.fillStyle = grad;
         ctx.fillRect(0, 0, W, H);
 
         // --- Shimmer sweep ---
         const shimX = ((t * 0.13) % 1.9 - 0.4) * W;
+        const rimShimMid = isLight() ? 'rgba(220,180,255,0.45)' : 'rgba(255,245,180,0.45)';
         const shimGrad = ctx.createLinearGradient(shimX - 90, 0, shimX + 90, 0);
         shimGrad.addColorStop(0,    'rgba(255,255,255,0)');
-        shimGrad.addColorStop(0.35, 'rgba(255,245,180,0.45)');
+        shimGrad.addColorStop(0.35, rimShimMid);
         shimGrad.addColorStop(0.5,  'rgba(255,255,255,0.9)');
-        shimGrad.addColorStop(0.65, 'rgba(255,245,180,0.45)');
+        shimGrad.addColorStop(0.65, rimShimMid);
         shimGrad.addColorStop(1,    'rgba(255,255,255,0)');
         ctx.fillStyle = shimGrad;
         ctx.fillRect(0, 0, W, H);
@@ -587,10 +626,12 @@
             const cx = s.xFrac * W + Math.sin(t * s.speedB * 60 + s.phase + 1) * 40;
             const hw = s.width * (0.6 + 0.4 * pulse);
             const sg = ctx.createLinearGradient(cx - hw, 0, cx + hw, 0);
+            const rimLight = isLight();
+            const rimMid = rimLight ? `hsla(${(s.hueA + s.hueB)/2 | 0}, 80%, 90%, ${op * 1.4})` : `rgba(255,255,220,${op * 1.4})`;
             sg.addColorStop(0,    'rgba(255,255,255,0)');
-            sg.addColorStop(0.25, s.colorA.replace('1)', `${op})`));
-            sg.addColorStop(0.5,  `rgba(255,255,220,${op * 1.4})`);
-            sg.addColorStop(0.75, s.colorB.replace('1)', `${op * 0.35})`));
+            sg.addColorStop(0.25, `hsla(${s.hueA}, 100%, 75%, ${op * 0.9})`);
+            sg.addColorStop(0.5,  rimMid);
+            sg.addColorStop(0.75, `hsla(${s.hueB}, 90%, 85%, ${op * 0.35})`);
             sg.addColorStop(1,    'rgba(255,255,255,0)');
             ctx.fillStyle = sg;
             ctx.fillRect(Math.max(0, cx - hw - 10), 0, hw * 2 + 20, H);
@@ -602,10 +643,11 @@
             const a = Math.max(0, pulse) * 0.95;
             if (a < 0.05) return;
             const gx = g.xFrac * W + Math.sin(t * 0.4 + g.phase) * 15;
+            const gh = isLight() ? g.prismHue : g.hue;
             const r = ctx.createRadialGradient(gx, H / 2, 0, gx, H / 2, 8);
-            r.addColorStop(0,   `hsla(${g.hue}, 100%, 98%, ${a})`);
-            r.addColorStop(0.4, `hsla(${g.hue}, 100%, 80%, ${a * 0.5})`);
-            r.addColorStop(1,   `hsla(${g.hue}, 100%, 70%, 0)`);
+            r.addColorStop(0,   `hsla(${gh}, 100%, 95%, ${a})`);
+            r.addColorStop(0.4, `hsla(${gh}, 90%, 80%, ${a * 0.5})`);
+            r.addColorStop(1,   `hsla(${gh}, 90%, 70%, 0)`);
             ctx.fillStyle = r;
             ctx.fillRect(Math.max(0, gx - 8), 0, 16, H);
         });
@@ -909,5 +951,282 @@
     resize();
 })();
 </script>
+
+<script>
+/* ── Light-mode: floating glass shards ───────────────────────────────────── */
+(function () {
+    const IMAGES = <?php
+    $files = glob(__DIR__ . '/images/*.{png,jpg,jpeg,gif,webp}', GLOB_BRACE);
+    $paths = array_map(fn($f) => 'images/' . basename($f), $files ?: []);
+    echo json_encode(array_values($paths));
+    ?>;
+
+    const cvs = document.createElement('canvas');
+    cvs.id = 'shard-canvas';
+    Object.assign(cvs.style, {
+        position: 'fixed', inset: '0', width: '100%', height: '100%',
+        pointerEvents: 'none', zIndex: '9998', display: 'block',
+    });
+    document.body.appendChild(cvs);
+    const ctx = cvs.getContext('2d');
+
+    let W = 0, H = 0;
+    let rafId = null;
+    let active = false;
+    const shards = [];
+    const colorCache = {}; // src -> {r,g,b}
+
+    function resize() {
+        W = cvs.width  = window.innerWidth;
+        H = cvs.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+
+    /* Build a random polygon (5-8 vertices) roughly shaped like a shard */
+    function makePoly(cx, cy, radius) {
+        const n = 5 + Math.floor(Math.random() * 4);
+        const pts = [];
+        for (let i = 0; i < n; i++) {
+            const angle = (i / n) * Math.PI * 2 + (Math.random() - 0.5) * 0.9;
+            const r = radius * (0.5 + Math.random() * 0.7);
+            pts.push([cx + Math.cos(angle) * r, cy + Math.sin(angle) * r]);
+        }
+        return pts;
+    }
+
+    /* Pre-load all images so drawImage works without taint issues */
+    const imageCache = {}; // src -> HTMLImageElement
+    IMAGES.forEach(src => {
+        const img = new Image();
+        img.onload = () => {
+            imageCache[src] = img;
+            // Sample dominant colour now that image is loaded
+            try {
+                const oc = document.createElement('canvas');
+                const sw = Math.min(img.naturalWidth, 80);
+                const sh = Math.min(img.naturalHeight * 0.55, 80);
+                oc.width = sw; oc.height = Math.max(1, sh);
+                const oc2 = oc.getContext('2d');
+                oc2.drawImage(img, 0, 0, img.naturalWidth, img.naturalHeight * 0.55, 0, 0, sw, sh);
+                const data = oc2.getImageData(0, 0, sw, Math.max(1, sh)).data;
+                let r = 0, g = 0, b = 0, count = 0;
+                for (let i = 0; i < data.length; i += 16) {
+                    if (data[i + 3] < 30) continue;
+                    r += data[i]; g += data[i+1]; b += data[i+2]; count++;
+                }
+                if (!count) count = 1;
+                colorCache[src] = { r: r/count|0, g: g/count|0, b: b/count|0 };
+            } catch(e) {
+                colorCache[src] = { r: 180, g: 160, b: 220 };
+            }
+        };
+        img.onerror = () => { colorCache[src] = { r: 180, g: 160, b: 220 }; };
+        img.src = src;
+    });
+
+    /* Spawn a shard from a random edge */
+    function spawnShard() {
+        const src = IMAGES[Math.floor(Math.random() * IMAGES.length)];
+        const size = 40 + Math.random() * 80;
+        const side = Math.floor(Math.random() * 4);
+        let x, y, vx, vy;
+        const speed = 0.25 + Math.random() * 0.5;
+        if (side === 0) { x = Math.random() * W; y = -size;     vx = (Math.random()-0.5)*0.6; vy =  speed; }
+        else if(side===1){ x = W + size;          y = Math.random()*H; vx = -speed; vy = (Math.random()-0.5)*0.6; }
+        else if(side===2){ x = Math.random() * W; y = H + size;  vx = (Math.random()-0.5)*0.6; vy = -speed; }
+        else             { x = -size;             y = Math.random()*H; vx =  speed; vy = (Math.random()-0.5)*0.6; }
+
+        // Random crop offset (normalised 0-1, used once image dims are known)
+        const cropOffsetX = Math.random();
+        const cropOffsetY = Math.random() * 0.6; // bias toward upper half (faces)
+
+        const shard = {
+            x, y, vx, vy, size,
+            src, cropOffsetX, cropOffsetY,
+            poly: makePoly(0, 0, size),
+            rot: Math.random() * Math.PI * 2,
+            rotSpeed: (Math.random() - 0.5) * 0.004,
+            alpha: 0,
+            fadeIn: true,
+            color: colorCache[src] || { r: 180, g: 160, b: 220 },
+            shimAngle: Math.random() * Math.PI,
+            shimSpeed: 0.004 + Math.random() * 0.006,
+            shimPhase: Math.random() * Math.PI * 2,
+        };
+
+        // Update colour once sampled if not yet available
+        if (!colorCache[src]) {
+            const check = setInterval(() => {
+                if (colorCache[src]) { shard.color = colorCache[src]; clearInterval(check); }
+            }, 100);
+        }
+
+        return shard;
+    }
+
+    function drawShard(s, masterAlpha) {
+        const { r, g, b } = s.color;
+        const a = s.alpha * masterAlpha;
+        if (a < 0.01) return;
+
+        const edgePulse = Math.sin(s.shimPhase) * 0.5 + 0.5;
+        const hue = (r > g && r > b) ? 0 : (g > b) ? 120 : 240;
+
+        ctx.save();
+        ctx.translate(s.x, s.y);
+        ctx.rotate(s.rot);
+
+        /* Clip to polygon */
+        ctx.beginPath();
+        s.poly.forEach(([px, py], i) => i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py));
+        ctx.closePath();
+        ctx.clip();
+
+        /* --- Draw image texture inside the shard --- */
+        const img = imageCache[s.src];
+        if (img && img.complete && img.naturalWidth > 0) {
+            const cropSize = s.size * 1.6;
+            const maxSx = Math.max(0, img.naturalWidth  - cropSize);
+            const maxSy = Math.max(0, img.naturalHeight - cropSize);
+            const sx = s.cropOffsetX * maxSx;
+            const sy = s.cropOffsetY * maxSy;
+            const sw = Math.min(cropSize, img.naturalWidth);
+            const sh = Math.min(cropSize, img.naturalHeight);
+
+            ctx.globalAlpha = a * 0.75;
+            ctx.drawImage(img, sx, sy, sw, sh, -s.size, -s.size, s.size * 2, s.size * 2);
+            ctx.globalAlpha = 1;
+        } else {
+            /* Fallback tinted fill while image loads */
+            ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${a * 0.35})`;
+            ctx.fill();
+        }
+
+        /* Dominant-colour tint wash over the photo */
+        ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${a * 0.20})`;
+        ctx.fill();
+
+        /* Glassy sheen gradient */
+        const shimX = Math.cos(s.shimAngle) * s.size;
+        const shimY = Math.sin(s.shimAngle) * s.size;
+        const faceGrad = ctx.createLinearGradient(-shimX, -shimY, shimX, shimY);
+        faceGrad.addColorStop(0,   `rgba(255,255,255,${a * 0.45})`);
+        faceGrad.addColorStop(0.4, `rgba(255,255,255,${a * 0.08})`);
+        faceGrad.addColorStop(1,   `rgba(${r}, ${g}, ${b}, ${a * 0.04})`);
+        ctx.fillStyle = faceGrad;
+        ctx.fill();
+
+        /* Prismatic edge sheen */
+        const edgeGrad = ctx.createLinearGradient(-s.size, 0, s.size, 0);
+        edgeGrad.addColorStop(0,   `hsla(${hue},     80%, 80%, ${a * 0.28 * edgePulse})`);
+        edgeGrad.addColorStop(0.33,`hsla(${hue+120}, 80%, 85%, ${a * 0.18 * edgePulse})`);
+        edgeGrad.addColorStop(0.66,`hsla(${hue+240}, 80%, 80%, ${a * 0.16 * edgePulse})`);
+        edgeGrad.addColorStop(1,   `hsla(${hue},     80%, 80%, ${a * 0.28 * edgePulse})`);
+        ctx.fillStyle = edgeGrad;
+        ctx.fill();
+
+        ctx.restore();
+
+        /* Outline — sharp glass edge */
+        ctx.save();
+        ctx.translate(s.x, s.y);
+        ctx.rotate(s.rot);
+        ctx.beginPath();
+        s.poly.forEach(([px, py], i) => i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py));
+        ctx.closePath();
+        ctx.strokeStyle = `rgba(255, 255, 255, ${a * 0.70})`;
+        ctx.lineWidth = 1.2;
+        ctx.stroke();
+
+        /* Thin prismatic highlight on one edge */
+        if (s.poly.length > 1) {
+            ctx.beginPath();
+            ctx.moveTo(s.poly[0][0], s.poly[0][1]);
+            ctx.lineTo(s.poly[1][0], s.poly[1][1]);
+            ctx.strokeStyle = `hsla(${hue+60}, 100%, 90%, ${a * 0.9 * edgePulse})`;
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        }
+        ctx.restore();
+    }
+
+    let masterAlpha = 0;
+    let spawnTimer  = 0;
+    const SPAWN_INTERVAL = 220; // frames between new shards (~3.7s at 60fps)
+    const MAX_SHARDS = 18;      // never more than this many at once
+
+    function loop() {
+        const light = document.body.classList.contains('light-mode');
+
+        // Fade master in/out
+        if (light)  masterAlpha = Math.min(1, masterAlpha + 0.015);
+        else        masterAlpha = Math.max(0, masterAlpha - 0.015);
+
+        ctx.clearRect(0, 0, W, H);
+
+        if (masterAlpha <= 0) {
+            rafId = null;
+            return;
+        }
+
+        // Spawn new shards when active
+        if (light) {
+            spawnTimer++;
+            if (spawnTimer >= SPAWN_INTERVAL) {
+                if (shards.length < MAX_SHARDS) shards.push(spawnShard());
+                spawnTimer = 0; // reset even if capped, so it doesn't burst on drop
+            }
+        }
+
+        // Update + draw shards
+        for (let i = shards.length - 1; i >= 0; i--) {
+            const s = shards[i];
+            s.x += s.vx;
+            s.y += s.vy;
+            s.rot += s.rotSpeed;
+            s.shimAngle += s.shimSpeed;
+            s.shimPhase += 0.018;
+
+            // Fade in
+            if (s.fadeIn) {
+                s.alpha = Math.min(1, s.alpha + 0.012);
+                if (s.alpha >= 1) s.fadeIn = false;
+            }
+
+            // Remove if fully off-screen
+            const margin = s.size * 2;
+            if (s.x < -margin || s.x > W + margin || s.y < -margin || s.y > H + margin) {
+                shards.splice(i, 1);
+                continue;
+            }
+
+            drawShard(s, masterAlpha);
+        }
+
+        rafId = requestAnimationFrame(loop);
+    }
+
+    /* Watch for light mode toggle */
+    const observer = new MutationObserver(() => {
+        const light = document.body.classList.contains('light-mode');
+        if (light && !rafId) {
+            spawnTimer = SPAWN_INTERVAL; // spawn immediately on switch
+            rafId = requestAnimationFrame(loop);
+        } else if (!light && !rafId) {
+            rafId = requestAnimationFrame(loop); // let fade-out run
+        }
+    });
+    observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+
+    // If already in light mode on load
+    if (document.body.classList.contains('light-mode')) {
+        spawnTimer = SPAWN_INTERVAL;
+        rafId = requestAnimationFrame(loop);
+    }
+})();
+</script>
+
 </body>
 </html>
