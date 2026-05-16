@@ -10,6 +10,7 @@
 <canvas id="fvyina-rain-canvas"></canvas>
 
     <nav class="wiki-nav">
+        <canvas id="nav-rim-canvas"></canvas>
         <div class="nav-left">
             <canvas id="sfaira-logo-canvas" style="display:block;cursor:default;" aria-label="SFAIRA"></canvas>
         </div>
@@ -503,6 +504,118 @@
 
     frame();
 })();
+
+/* ── Nav rim gold prism shine ────────────────────────────────────────────── */
+(function () {
+    const cvs = document.getElementById('nav-rim-canvas');
+    if (!cvs) return;
+    const ctx = cvs.getContext('2d');
+    let W = 0;
+    const H = 3;
+
+    function resize() {
+        W = cvs.width  = cvs.offsetWidth;
+        cvs.height = H;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    // Same gold stops as the logo
+    const GOLD_STOPS = [
+        [0.00, '#4a2e00'],
+        [0.08, '#c8860a'],
+        [0.18, '#f5d060'],
+        [0.28, '#ffe680'],
+        [0.38, '#fff4b0'],
+        [0.46, '#ffd700'],
+        [0.54, '#ffec80'],
+        [0.62, '#e8a800'],
+        [0.72, '#b06800'],
+        [0.82, '#f0c840'],
+        [0.90, '#ffe070'],
+        [1.00, '#7a4e00'],
+    ];
+
+    // Prism shafts along the rim
+    const SHAFTS = Array.from({length: 10}, (_, i) => ({
+        xFrac:  i / 9,
+        width:  18 + Math.random() * 40,
+        speedA: 0.006 + Math.random() * 0.005,
+        speedB: 0.004 + Math.random() * 0.003,
+        phase:  Math.random() * Math.PI * 2,
+        colorA: `hsla(${35 + Math.floor(Math.random()*25)}, 100%, 80%, 1)`,
+        colorB: `hsla(${195 + Math.floor(Math.random()*45)}, 90%, 85%, 1)`,
+    }));
+
+    // Tiny glint dots along the rim
+    const GLINTS = Array.from({length: 18}, () => ({
+        xFrac:  Math.random(),
+        speedP: 0.02 + Math.random() * 0.025,
+        phase:  Math.random() * Math.PI * 2,
+        hue:    38 + Math.random() * 20,
+    }));
+
+    let t = 0;
+
+    function frame() {
+        t += 0.012;
+        if (W === 0) { requestAnimationFrame(frame); return; }
+        ctx.clearRect(0, 0, W, H);
+
+        // --- Base gold gradient (slowly sweeping) ---
+        const sweep = Math.sin(t * 0.35) * 0.5 + 0.5;
+        const grad = ctx.createLinearGradient(W * (sweep - 0.4), 0, W * (sweep + 0.7), 0);
+        GOLD_STOPS.forEach(([p, c]) => grad.addColorStop(p, c));
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, W, H);
+
+        // --- Shimmer sweep ---
+        const shimX = ((t * 0.13) % 1.9 - 0.4) * W;
+        const shimGrad = ctx.createLinearGradient(shimX - 90, 0, shimX + 90, 0);
+        shimGrad.addColorStop(0,    'rgba(255,255,255,0)');
+        shimGrad.addColorStop(0.35, 'rgba(255,245,180,0.45)');
+        shimGrad.addColorStop(0.5,  'rgba(255,255,255,0.9)');
+        shimGrad.addColorStop(0.65, 'rgba(255,245,180,0.45)');
+        shimGrad.addColorStop(1,    'rgba(255,255,255,0)');
+        ctx.fillStyle = shimGrad;
+        ctx.fillRect(0, 0, W, H);
+
+        // --- Prism shafts ---
+        SHAFTS.forEach(s => {
+            const pulse = Math.sin(t * s.speedA * 60 + s.phase) * 0.5 + 0.5;
+            const op = 0.08 + 0.28 * pulse;
+            const cx = s.xFrac * W + Math.sin(t * s.speedB * 60 + s.phase + 1) * 40;
+            const hw = s.width * (0.6 + 0.4 * pulse);
+            const sg = ctx.createLinearGradient(cx - hw, 0, cx + hw, 0);
+            sg.addColorStop(0,    'rgba(255,255,255,0)');
+            sg.addColorStop(0.25, s.colorA.replace('1)', `${op})`));
+            sg.addColorStop(0.5,  `rgba(255,255,220,${op * 1.4})`);
+            sg.addColorStop(0.75, s.colorB.replace('1)', `${op * 0.35})`));
+            sg.addColorStop(1,    'rgba(255,255,255,0)');
+            ctx.fillStyle = sg;
+            ctx.fillRect(Math.max(0, cx - hw - 10), 0, hw * 2 + 20, H);
+        });
+
+        // --- Glint dots ---
+        GLINTS.forEach(g => {
+            const pulse = Math.sin(t * g.speedP + g.phase);
+            const a = Math.max(0, pulse) * 0.95;
+            if (a < 0.05) return;
+            const gx = g.xFrac * W + Math.sin(t * 0.4 + g.phase) * 15;
+            const r = ctx.createRadialGradient(gx, H / 2, 0, gx, H / 2, 8);
+            r.addColorStop(0,   `hsla(${g.hue}, 100%, 98%, ${a})`);
+            r.addColorStop(0.4, `hsla(${g.hue}, 100%, 80%, ${a * 0.5})`);
+            r.addColorStop(1,   `hsla(${g.hue}, 100%, 70%, 0)`);
+            ctx.fillStyle = r;
+            ctx.fillRect(Math.max(0, gx - 8), 0, 16, H);
+        });
+
+        requestAnimationFrame(frame);
+    }
+
+    frame();
+})();
+
 </script>
 
 

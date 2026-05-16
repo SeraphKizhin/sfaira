@@ -1,7 +1,6 @@
 body {
-    background: linear-gradient(135deg, #0f111a 0%, #1e1324 25%, #261f14 50%, #121b22 75%, #0f111a 100%);
-    background-size: 400% 400%;
-    animation: prismShift 20s ease infinite;
+    background: radial-gradient(ellipse at 50% 35%, #1c1308 0%, #0e0b06 45%, #070604 100%);
+    background-attachment: fixed;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: #e0e0e0;
     margin: 0;
@@ -22,9 +21,20 @@ body {
     padding: 15px 40px;
     background: rgba(10, 10, 15, 0.85);
     color: white;
-    border-bottom: 3px solid;
-    border-image: linear-gradient(90deg, #00f2fe, #f093fb, #ffd700, #f5576c, #00f2fe) 1;
+    border-bottom: 3px solid transparent;
+    position: relative;
     backdrop-filter: blur(12px);
+}
+
+#nav-rim-canvas {
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    pointer-events: none;
+    z-index: 10;
+    display: block;
 }
 
 .nav-left .logo {
@@ -243,7 +253,7 @@ body {
 }
 
 body.light-mode {
-    background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 25%, #e2d1f9 50%, #fdfcfb 75%, #e0eafc 100%);
+    background: radial-gradient(ellipse at 50% 35%, #f5ecd6 0%, #ede4cf 45%, #e8dfc8 100%);
     color: #2c2c2c;
 }
 
