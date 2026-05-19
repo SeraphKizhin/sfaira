@@ -49,37 +49,37 @@
             
             <div class="character-grid">
                 <a href="#" class="char-card">
-                    <div class="char-image"><img src="images/seth.png" alt="Seth"></div>
+                    <div class="char-image"><img src="images/Seth.png" alt="Seth"></div>
                     <div class="char-label">Seth</div>
                 </a>
                 <a href="#" class="char-card" data-color="#DE98FF" id="fvyina-card">
                     <div class="char-image-wrap">
-                        <div class="char-image"><img src="images/fvyina.png" alt="Fvyina"></div>
+                        <div class="char-image"><img src="images/Fvyina.png" alt="Fvyina"></div>
                         <canvas class="spark-canvas" id="fvyina-sparks"></canvas>
                     </div>
                     <div class="char-label">Fvyina</div>
                 </a>
                 <a href="#" class="char-card" data-color="#FFDFAE" id="aurelius-card">
                     <div class="char-image-wrap">
-                        <div class="char-image"><img src="images/aurelius.png" alt="Aurelius"></div>
+                        <div class="char-image"><img src="images/Aurelius.png" alt="Aurelius"></div>
                     </div>
                     <div class="char-label">Aurelius</div>
                 </a>
                 <a href="#" class="char-card" data-color="#A8A3CB">
-                    <div class="char-image"><img src="images/mara.png" alt="Mara"></div>
+                    <div class="char-image"><img src="images/Mara.png" alt="Mara"></div>
                     <div class="char-label">Mara</div>
                 </a>
 
                 <a href="#" class="char-card" data-color="#BDD190">
-                    <div class="char-image"><img src="images/agnis.png" alt="Agnis"></div>
+                    <div class="char-image"><img src="images/Agnis.png" alt="Agnis"></div>
                     <div class="char-label">Agnis</div>
                 </a>
                 <a href="#" class="char-card" data-color="#ffffff" id="verlierer-card">
                     <div class="char-image">
-                        <img src="images/verlierer.png" alt="Verli">
+                        <img src="images/Verlierer.png" alt="Verli">
                         <!-- RGB ghost layers for chromatic split on portrait -->
-                        <img src="images/verlierer.png" alt="" class="verlierer-ghost ghost-red" id="v-ghost-red">
-                        <img src="images/verlierer.png" alt="" class="verlierer-ghost ghost-cyan" id="v-ghost-cyan">
+                        <img src="images/Verlierer.png" alt="" class="verlierer-ghost ghost-red" id="v-ghost-red">
+                        <img src="images/Verlierer.png" alt="" class="verlierer-ghost ghost-cyan" id="v-ghost-cyan">
                         <!-- Screen tear bar -->
                         <div class="verlierer-tear" id="verlierer-tear"></div>
                     </div>
